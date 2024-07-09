@@ -1,112 +1,81 @@
-import time
-import sys
+class BankAccount: 
+    
+
+    def __init__(self, name, balance, interest_rate) -> None:
+        self.name = name
+        self.account_balance = balance
+        self.interest_rate = interest_rate
+        self.total_interest_earned = 0
+
+    def balance(self): return self.account_balance
+    
+    def rename(self):
+        self.name = input("Choose a new name for this account: ")
+        print("Success. This account's new name is: {0}".format(self.name))
 
 
-class Account:
+    def deposit(self, amount):
+        self.account_balance += amount
+        print("Successfully deposited {0} into your account. \nYour new balance is: {1}".format(amount, self.account_balance))
 
-    Customers = []
+    def withdraw(self, amount):
+        if amount <= self.account_balance:
+            self.account_balance -= amount
+            print("Successfully withdrew {0} from your account. \nYour new balance is: {1}".format(amount, self.account_balance))
+        else: print("You do not have enough money to cover this withdrawal.")
 
+    def interest(self, years):
+        differential = self.account_balance
+        self.account_balance *= ((1+(self.interest_rate / 100)) ** years)
+        self.total_interest_earned += (eval(str(self.account_balance - differential)))
+        print("{0}% Interest applied over {1} Years. New balance: {2}".format(self.interest_rate, years, self.account_balance))
 
+    def open_savings(self):
+        answer = input("Confirm the opening of a new savings account? (YES/NO) ")
+        if answer == "YES" or answer == "yes":
+            self.savings_balance = 0
+            print("You have successfully opened a savings account. Balance: " + str(self.savings_balance))
 
-    def create_account(self, accountName, accountBalance, accountType):
-        self.accountBalance = accountBalance
-        self.accountName = accountName
-        self.accountType = accountType
-        return accountName, accountBalance, accountType
-        print("\n\nCreated", self.accountType, "account for ", str(accountName))
-        print("Starting account balance is: $", str(accountBalance))
-
-
-class CheckingAccount(Account):
-
-    def create_checking(self, accountName, accountBalance):
-        self.accountBalance = accountBalance
-        self.accountName = accountName
-        self.accountType = "Checking"
-        print("\n\nCreated account for ", str(accountName))
-        print("Starting account balance is: $", str(accountBalance))
-
-    def add_money(self, amount):
-        self.accountBalance += amount
-        print("\nyou added ${0} to your Bank, {1}".format(str(amount), str(self.accountName)))
-        print("Your account balance is: $" + str(self.accountBalance))
-
-    def withdraw_money(self, amount):
-        if amount <= self.accountBalance:
-            self.accountBalance -= amount
-            print("\nyou withdrew ${0} from your Bank, {1}".format(str(amount), str(self.accountName)))
-            print("Your account balance is: $", str(self.accountBalance))
         else:
-            print("\nInsufficient funds for withdrawal!")
-            print("Your account balance is: $", str(self.accountBalance))
+            print("You have successfully cancelled opening a savings account.")
 
-    def info(self):
-        print("\nAccount Information: \n", self.accountName)
-        print(self.accountBalance)
-        print(self.accountType)
+    def savings_exists(self) -> bool:
+        if hasattr(self, 'savings_balance'):
+            return True
 
+    
+    def save(self, amount):
+        if self.savings_exists == True:
+            if amount <= self.account_balance:
+                self.account_balance -= amount
+                self.savings_balance += amount
+                print("\nSuccessfully deposited {0} into savings. \nYour savings balance is: {1}\nYour account balance is: {2}\n".format(amount, self.savings_balance, self.account_balance))
+            else: print("You do not have enough to deposit this amount into savings.")
+        else: 
+            answer = input("\nYou don't have a savings to deposit to.\nWould you like to open a new savings account? (YES/NO) ")
+            if answer == "YES" or answer == "yes":
+                self.open_savings()
+            else: print("You chose not to open a savings account.")
 
-class SavingAccount:
-
-    def __init__(self, accountNameArgs, accountBalanceArgs, yearlyAprArgs):
-        self.accountType = "Savings"
-        self.accountBalance = accountBalanceArgs
-        self.accountName = accountNameArgs
-        self.yearlyApr = yearlyAprArgs
-        print("\n\nCreated savings account for ", str(self.yearlyApr),
-              " with starting balance " + str(self.accountBalance))
-        print(messages['bal'], str(self.accountBalance))
-
-    def add_money(self, amount):
-        self.accountBalance += amount
-        print("\nyou added ${0} to your Bank, {1}".format(str(amount), str(self.accountName)))
-        print(messages['bal'], str(self.accountBalance))
-
-    def gain_interest(self, yrs):
-        if self.yearlyApr > 0:
-            balance = self.accountBalance
-            self.accountBalance *= ((self.yearlyApr / 100) + 1) ** yrs
-            interest = round(self.accountBalance - balance, 2)
-            print("\nYour interest has been applied! New balance: ",
-                  str((round(self.accountBalance, 2))))
-            print("Years stored: {0} \nAPR: {1}%/yr\nEarned interest: ${2}".
-                  format(str(yrs), str(self.yearlyApr / 100), str(interest)))
-        else:
-            print("Yearly APR isn't positive!")
-    def info(self):
-        print("\nAccount Information: \n", self.accountName)
-        print("$" + str(round(self.accountBalance, 2)))
-        print(self.accountType)
-
-
-
-messages = {
-    'deposit': "\nyou added ${0} to your Bank, {1}",
-    'withdraw': "\nYou withdrew ${0} from your Bank, {1}",
-    'create': "\n\nCreated account for ",
-    'bal': "\nYour account balance is: $"
-}
-
-
-#class Bank():
-
-    #def createChecking(self, name, balance):
-        #CheckingAccount(name, balance)
-
-    #def createSaving(self):
-      #  pass
-
-   # def list(self):
-        #accountList = []
-        #accountList.append(CheckingAccount().accountName)
-
-
-bob = CheckingAccount().create_account("Bob", 30, )
-# bob.add_money(50)
-# bob.withdraw_money(80)
-# bob.info()
+    def info(self) -> None:
+        print("\n====ACCOUNT INFO====\n")
+        print("Account Name: " + self.name)
+        print("Account Balance: " + str(self.account_balance))
+        print("Account Interest Rate: " + str(self.interest_rate) + "% APR")
+        if self.savings_exists == True: 
+            print("Savings Exists: YES")
+            print("Savings Balance: " + str(self.savings_balance))
+        else: print("Savings Exists: NO")
+        print("Lifetime Interest Gained: " + str(self.total_interest_earned))
+        print("\n====================\n")
 
 
 
 
 
+
+    
+Draco = BankAccount("Draco", 0, 5)
+Draco.deposit(50)
+Draco.interest(10)
+Draco.info()
