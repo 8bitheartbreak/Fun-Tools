@@ -57,6 +57,15 @@ class BankAccount:
                 self.open_savings()
             else: print("You chose not to open a savings account.")
 
+    def transfer(self, recipient, amount):
+        if isinstance(recipient, BankAccount):
+            if amount <= self.account_balance: 
+                recipient.deposit(amount)
+                self.withdraw(amount)
+            else: print("Not enough money to make this transfer. ")
+        else: print("This user is not a member of the bank.")
+
+
     def info(self) -> None:
         print("\n====ACCOUNT INFO====\n")
         print("Account Name: " + self.name)
@@ -74,8 +83,13 @@ class BankAccount:
 
 
 
+
     
-Draco = BankAccount("Draco", 0, 5)
-Draco.deposit(50)
-Draco.interest(10)
-Draco.info()
+Draco = BankAccount("Draco", 500, 5)
+John = BankAccount("John", 500, 0)
+
+print(BankAccount)
+
+
+
+
